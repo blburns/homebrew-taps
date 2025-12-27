@@ -8,6 +8,7 @@
 	# Dependencies
 	depends_on "openssl@1.1" => :build   # Build dependency for OpenSSL
 	depends_on "cmake" => :build
+	depends_on "googletest" => :build
 	depends_on "libpng" => :optional      # Optional runtime dependency
 	depends_on "git" => :recommended      # Recommending Git for version control (could be optional)
   
