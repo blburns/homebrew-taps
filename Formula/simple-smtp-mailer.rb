@@ -1,7 +1,7 @@
   class SimpleSmtpMailer < Formula
 	desc "Simple SMTP Mailer"
 	homepage "https://github.com/blburns/simple-smtp-mailer"
-	url "https://github.com/blburns/simple-smtp-mailer/releases/download/v0.2.0/simple-smtp-mailer-0.2.0.tar.gz"
+	url "https://github.com/blburns/simple-smtp-mailer/archive/refs/tags/v0.2.0.tar.gz"
 	sha256 "54013664192ef628d80981bb3e2f679ad1160ccdd556eadf45e8d41e4ad86be7"
 	version "v0.2.0"
   
