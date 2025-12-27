@@ -2,7 +2,7 @@
 	desc "Simple SMTP Mailer"
 	homepage "https://github.com/blburns/simple-smtp-mailer"
 	url "https://github.com/blburns/simple-smtp-mailer/archive/refs/tags/v0.2.0.tar.gz"
-	sha256 "54013664192ef628d80981bb3e2f679ad1160ccdd556eadf45e8d41e4ad86be7"
+	sha256 "38d4ac27b80bd6f3aa620221b06cb5cab6e04558a7d283648231a04cc7e94617"
 	version "v0.2.0"
   
 	# Dependencies
