@@ -13,7 +13,8 @@ class SimpleSmtpMailer < Formula
   depends_on "jsoncpp"
   depends_on "curl"
   depends_on "yaml-cpp"
-  depends_on "python@3.9"
+  # Python 3.9+ required for OAuth2 helper tools
+  depends_on "python@3.9" => :build
 
   # Optional test dependency
   depends_on "googletest" => [:build, :test]
@@ -49,8 +50,43 @@ class SimpleSmtpMailer < Formula
     end
 
     # Install Python dependencies for OAuth2 helper tools
-    python3 = Formula["python@3.9"].opt_bin/"python3"
-    system python3, "-m", "pip", "install", "--prefix", prefix, "requests"
+    # Try to find the highest available Python 3.9+ version
+    python_versions = %w[python@3.14 python@3.13 python@3.12 python@3.11 python@3.10 python@3.9]
+    python_formula = nil
+    python3 = nil
+    python_lib = nil
+    
+    python_versions.each do |version|
+      begin
+        formula = Formula[version]
+        python3_path = formula.opt_bin/"python3"
+        if python3_path.exist?
+          python_formula = formula
+          python3 = python3_path
+          # Get Python version to determine site-packages path
+          python_version_output = `#{python3} --version 2>&1`.strip
+          python_version = python_version_output.match(/Python (\d+\.\d+)/)
+          if python_version
+            python_version = python_version[1]
+            python_lib = formula.opt_lib/"python#{python_version}/site-packages"
+            break
+          end
+        end
+      rescue FormulaUnavailableError
+        next
+      end
+    end
+    
+    # Fallback to python@3.9 if nothing else found (should always be available due to depends_on)
+    if python3.nil?
+      python_formula = Formula["python@3.9"]
+      python3 = python_formula.opt_bin/"python3"
+      python_lib = python_formula.opt_lib/"python3.9/site-packages"
+    end
+    
+    # Install requests to Python's site-packages so OAuth2 helper tools can use it
+    system python3, "-m", "pip", "install", "--no-warn-script-location",
+           "--target", python_lib, "requests"
   end
 
   test do
