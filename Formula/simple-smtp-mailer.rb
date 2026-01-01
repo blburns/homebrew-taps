@@ -19,6 +19,12 @@ class SimpleSmtpMailer < Formula
   depends_on "googletest" => [:build, :test]
 
   def install
+    # Patch CMakeLists.txt to skip service file installation (requires root)
+    # This prevents installation to /Library/LaunchDaemons which requires sudo
+    inreplace "CMakeLists.txt",
+              "elseif(APPLE)\n    install(FILES deployment/launchd/com.${PROJECT_NAME}.${PROJECT_NAME}.plist\n        DESTINATION /Library/LaunchDaemons\n    )",
+              "elseif(APPLE)\n    # Service file installation skipped for Homebrew (requires root)\n    # install(FILES deployment/launchd/com.${PROJECT_NAME}.${PROJECT_NAME}.plist\n    #     DESTINATION /Library/LaunchDaemons\n    # )"
+    
     # Create build directory
     mkdir "build" do
       # Configure CMake with proper paths
@@ -38,7 +44,7 @@ class SimpleSmtpMailer < Formula
       # Build
       system "cmake", "--build", "."
       
-      # Install
+      # Install (service file installation is already patched out)
       system "cmake", "--install", "."
     end
 
