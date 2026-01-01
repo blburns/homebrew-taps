@@ -52,25 +52,15 @@ class SimpleSmtpMailer < Formula
     # Install Python dependencies for OAuth2 helper tools
     # Try to find the highest available Python 3.9+ version
     python_versions = %w[python@3.14 python@3.13 python@3.12 python@3.11 python@3.10 python@3.9]
-    python_formula = nil
     python3 = nil
-    python_lib = nil
     
     python_versions.each do |version|
       begin
         formula = Formula[version]
         python3_path = formula.opt_bin/"python3"
         if python3_path.exist?
-          python_formula = formula
           python3 = python3_path
-          # Get Python version to determine site-packages path
-          python_version_output = `#{python3} --version 2>&1`.strip
-          python_version = python_version_output.match(/Python (\d+\.\d+)/)
-          if python_version
-            python_version = python_version[1]
-            python_lib = formula.opt_lib/"python#{python_version}/site-packages"
-            break
-          end
+          break
         end
       rescue FormulaUnavailableError
         next
@@ -79,12 +69,14 @@ class SimpleSmtpMailer < Formula
     
     # Fallback to python@3.9 if nothing else found (should always be available due to depends_on)
     if python3.nil?
-      python_formula = Formula["python@3.9"]
-      python3 = python_formula.opt_bin/"python3"
-      python_lib = python_formula.opt_lib/"python3.9/site-packages"
+      python3 = Formula["python@3.9"].opt_bin/"python3"
     end
     
-    # Install requests to Python's site-packages so OAuth2 helper tools can use it
+    # Install requests to formula's own lib directory (writable, not Python's read-only site-packages)
+    python_lib = lib/"python3.9/site-packages"
+    python_lib.mkpath
+    
+    # Install requests to our formula's lib directory
     system python3, "-m", "pip", "install", "--no-warn-script-location",
            "--target", python_lib, "requests"
   end
