@@ -1,8 +1,8 @@
 class SimpleSmtpMailer < Formula
   desc "High-performance SMTP mailer with queue management and OAuth2 support"
   homepage "https://github.com/blburns/simple-smtp-mailer"
-  url "https://github.com/blburns/simple-smtp-mailer/archive/refs/tags/v0.2.0.tar.gz"
-  sha256 "38d4ac27b80bd6f3aa620221b06cb5cab6e04558a7d283648231a04cc7e94617"
+  url "https://github.com/blburns/simple-smtp-mailer/archive/refs/tags/v0.2.1.tar.gz"
+  sha256 "32977e270c331fac17da4ecc0d332cf7d7ea586aacdb92cb084d749fa350beb1"
   license "Apache-2.0"
   head "https://github.com/blburns/simple-smtp-mailer.git", branch: "main"
 
